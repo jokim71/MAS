@@ -3,11 +3,14 @@ package egovframework.example.manufactItem.web;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,11 +20,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import egovframework.example.cmmn.MakeExcel;
 import egovframework.example.cmmn.service.MasCommonService;
 import egovframework.example.cmmn.service.MasCommonVO;
 import egovframework.example.manufactItem.service.ManufactItemService;
 import egovframework.example.manufactItem.service.ManufactItemVO;
 import egovframework.example.manufactItem.service.ScaleVO;
+import egovframework.example.sample.service.EgovSampleService;
+import egovframework.example.sample.service.SampleDefaultVO;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
@@ -46,6 +52,10 @@ public class manufactItemController {
 	
 	@Resource(name = "masCommonService")
 	private MasCommonService masCommonService;
+	
+	/** 엑셀 다운로드 Service */ 
+	@Resource(name = "sampleService")
+	private EgovSampleService sampleService;
 	
 	/**
 	 * @Method selectManufactItemList
@@ -125,6 +135,7 @@ public class manufactItemController {
 		
 		List<?> scaleList = manufactItemService.selectScaleList(scaleVO);		
 		model.addAttribute("resultScaleList", scaleList);		
+		model.addAttribute("id", id); // 지시번호+투입원료 데이터 엑셀로 출력하기 위한 변수
 		
 		log.debug("##### selectManufactItemList selectManufactItemList :: " + list);
 		log.debug("##### selectManufactItemList selectManufactItemListCnt :: " + totCnt);
@@ -153,4 +164,67 @@ public class manufactItemController {
 		log.debug("##### selectScaleCapacity END !!! #####");
 		return "manufactItem/scaleCapacityPop";
 	}
+	
+	/**
+	 * @param request
+	 * @param response
+	 * @param searchVO
+	 * @param modelMap
+	 * @throws Exception
+	 * 지시내역 그리드 엑셀 다운로드
+	 */
+	@RequestMapping(value = "/excelManufactItemList.do")
+    public void excelManufactItemList(HttpServletRequest request,
+            HttpServletResponse response, @ModelAttribute("searchVO") ManufactItemVO searchVO,
+            ModelMap modelMap) throws Exception { // 해당 화면의 검색조건에 해당하는 vo가 있다면 추가
+
+        // 리스트 조회하듯이 검색조건을 파라미터로 받아온다음 리스트를 조회한다.
+		List<?> list = manufactItemService.selectManufactItemList(searchVO);
+        
+        // 받은 데이터를 맵에 담는다.
+        Map<String, Object> beans = new HashMap<String, Object>();
+        beans.put("dataList", list);
+        
+        // 엑셀 다운로드 메소드가 담겨 있는 객체
+        MakeExcel me = new MakeExcel();
+
+        //me.download(request, response, beans, "다운받을때지정될 엑셀파일명", "엑셀템플릿 파일 명.xlsx", "");
+        me.download(request, response, beans, "지시번호", "manufactItem.xlsx", "");
+    }
+	
+	/**
+	 * @param request
+	 * @param response
+	 * @param searchVO
+	 * @param modelMap
+	 * @throws Exception
+	 * 투입원료 그리드 엑셀 다운로드
+	 */
+	@RequestMapping(value = "/excelScaleCapacityList.do")
+    public void excelScaleCapacityList(HttpServletRequest request,
+            HttpServletResponse response, @ModelAttribute("searchVO") ManufactItemVO searchVO,
+            ModelMap modelMap) throws Exception { // 해당 화면의 검색조건에 해당하는 vo가 있다면 추가
+
+        // 리스트 조회하듯이 검색조건을 파라미터로 받아온다음 리스트를 조회한다.
+		ScaleVO scaleVO = new ScaleVO();
+		String id = searchVO.getSearchOrderNo();
+System.out.println("id >>> " + id);
+		if (id == null || id.length() == 0) {
+			id = "";
+		}
+				
+		scaleVO.setsOrderNo(id);		// 선택한 지시번호	
+				
+		List<?> scaleList = manufactItemService.selectScaleList(scaleVO);
+        
+        // 받은 데이터를 맵에 담는다.
+        Map<String, Object> beans = new HashMap<String, Object>();
+        beans.put("dataList", scaleList);
+        
+        // 엑셀 다운로드 메소드가 담겨 있는 객체
+        MakeExcel me = new MakeExcel();
+
+        //me.download(request, response, beans, "다운받을때지정될 엑셀파일명", "엑셀템플릿 파일 명.xlsx", "");
+        me.download(request, response, beans, "지시번호+투입원료", "scaleCapacity.xlsx", "");
+    }
 }

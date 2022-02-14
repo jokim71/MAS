@@ -23,6 +23,7 @@ public class ManufactItemVO extends CommPagingVO{
 	private String sItemCode;		// 제조품목코
 	private String sOrderDate;		// 제조일자 (시작)
 	private String eOrderDate;		// 제조일자 (종료) 
+	private String searchOrderNo;	// 엑셀출력용 지시번호 변수 저장
 	
 	private String Sequence;			// 일련번호
 	private String CRT_TYPE;			// TYPE
@@ -193,6 +194,12 @@ public class ManufactItemVO extends CommPagingVO{
 	}
 	public void setEndCheck(String endCheck) {
 		EndCheck = endCheck;
+	}
+	public String getSearchOrderNo() {
+		return searchOrderNo;
+	}
+	public void setSearchOrderNo(String searchOrderNo) {
+		this.searchOrderNo = searchOrderNo;
 	} 
 	
 }

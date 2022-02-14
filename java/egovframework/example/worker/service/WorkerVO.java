@@ -23,6 +23,7 @@ public class WorkerVO extends CommPagingVO {
 	private String worker_info_seq; // 순번
 	private String compid;  // 공장
 	
+	private String empid;	// 
 	private String worker; // 작업자 이름
 	private String use_yn; // 사용여부
 	
@@ -66,6 +67,12 @@ public class WorkerVO extends CommPagingVO {
 	}
 	public void setCompid(String compid) {
 		this.compid = compid;
+	}
+	public String getEmpid() {
+		return empid;
+	}
+	public void setEmpid(String empid) {
+		this.empid = empid;
 	}
 	public String getWorker() {
 		return worker;

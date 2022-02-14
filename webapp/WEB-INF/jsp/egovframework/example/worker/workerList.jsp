@@ -36,6 +36,7 @@
         /* 작업자 추가 function */
         function fn_worker_write_Pop() {
         	document.listForm.sWorkerInfoSeq.value = "";
+        	document.listForm.empid.value = "";
         	document.listForm.worker.value = "";
         	document.listForm.use_yn.value = "Y";
         	document.listForm.compid.value = document.listForm.sCompId.value;
@@ -44,8 +45,9 @@
         } 
         
         /* 글 수정 화면 function */
-        function fn_worker_update(seq, worker, yn) {
+        function fn_worker_update(seq, empid, worker, yn) {
         	document.listForm.sWorkerInfoSeq.value = seq;
+        	document.listForm.empid.value  = empid;
         	document.listForm.worker.value = worker;
         	document.listForm.use_yn.value = yn;
         	document.listForm.compid.value = document.listForm.sCompId.value;
@@ -123,17 +125,20 @@
         				<col width="10%"/>
         				<col width="10%"/>
         				<col width="10%"/>
+        				<col width="10%"/>
         			</colgroup>
         			<tr>
         				<th align="center" class="fixHeader">No</th>
+        				<th align="center" class="fixHeader"><spring:message code="title.worker.empid" /></th>
         				<th align="center" class="fixHeader"><spring:message code="title.worker.worker" /></th>
         				<th align="center" class="fixHeader"><spring:message code="title.worker.use_yn" /></th>
          				<th align="center" class="fixHeader"><spring:message code="title.worker.add_tim" /></th>
         				
         			</tr>
         			<c:forEach var="result" items="${resultList}" varStatus="status">
-            			<tr onClick="javaScript:fn_worker_update('<c:out value="${result.workerInfoSeq}"/>', '<c:out value="${result.worker}"/>', '<c:out value="${result.useYn}"/>')">
+            			<tr onClick="javaScript:fn_worker_update('<c:out value="${result.workerInfoSeq}"/>', '<c:out value="${result.empid}"/>', '<c:out value="${result.worker}"/>', '<c:out value="${result.useYn}"/>')">
             				<td align="center" class="listtd"><c:out value="${result.workerInfoSeq}"/></td>
+            				<td align="center" class="listtd"><c:out value="${result.empid}"/></td>
             				<td align="center" class="listtd"><c:out value="${result.worker}"/></td>
             				<td align="center" class="listtd"><c:out value="${result.useYn}"/></td>
             			    <td align="center" class="listtd"><c:out value="${result.addtim}"/></td>
@@ -158,8 +163,12 @@
 		    	<!-- // 타이틀 -->
 		    	<div id="search">
 		    		<div>
+						<label for="searchKeyword" style="visibility:show; margin-left: 10px;"><spring:message code="title.worker.empid" /></label>				
+							<form:input path="empid" cssClass="txt" style="margin-left: 11px"/>                        
+					</div>	
+		    		<div style="margin-top: 10px;">
 						<label for="searchKeyword" style="visibility:show; margin-left: 10px;"><spring:message code="title.worker.worker" /></label>				
-							<form:input path="worker" cssClass="txt" style="margin-left: 11px"/>                        
+							<form:input path="worker" cssClass="txt" />                        
 					</div>	
 					<div style="margin-top: 10px;">					    	
 		       			<label for="searchKeyword" style="visibility:show; margin-left: 10px"><spring:message code="title.worker.use_yn" /></label>

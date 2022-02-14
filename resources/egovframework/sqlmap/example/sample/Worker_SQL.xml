@@ -9,6 +9,7 @@
 	<select id="workerDAO.selectWorkerList" parameterClass="workerVO" resultClass="egovMap">
 		SELECT TOP (#recordCountPerPage#)
 			WORKER_INFO_SEQ,
+			EMPID,
 			WORKER,
 			USE_YN,
 			CONVERT(NVARCHAR(20), ADDTIM, 20) AS ADDTIM			
@@ -48,6 +49,7 @@
 			ON ( TWI.WORKER_INFO_SEQ = CONVERT(INT, #sWorkerInfoSeq#))
 			WHEN MATCHED THEN
 					UPDATE SET
+					        EMPID  = #empid#,
 							WORKER = #worker#,
 							USE_YN = #use_yn#,
 							COMPID = #compid#,
@@ -55,8 +57,8 @@
 							LOGTIM = GETDATE()
 			WHEN NOT MATCHED THEN
 				    INSERT 
-						(WORKER, USE_YN, COMPID, ADDEMP, ADDTIM, LOGEMP, LOGTIM)
+						(EMPID, WORKER, USE_YN, COMPID, ADDEMP, ADDTIM, LOGEMP, LOGTIM)
 					VALUES
-						(#worker#, #use_yn#, #compid#, #add_emp#, GETDATE(), #log_emp#, GETDATE() ) ;
+						(#empid#, #worker#, #use_yn#, #compid#, #add_emp#, GETDATE(), #log_emp#, GETDATE() ) ;
 	</insert> 
 </sqlMap>
