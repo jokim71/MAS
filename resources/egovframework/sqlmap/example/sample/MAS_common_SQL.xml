@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="MasCommon">
+
+	<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias alias="masCommonVO" type="egovframework.example.cmmn.service.MasCommonVO"/>
+
+	<!-- 회사이이디 읽어오기 -->
+	<select id="masCommonDAO.selectCompIDList" parameterClass="masCommonVO" resultClass="egovMap">
+		SELECT DISTINCT COMPID as compId
+		  FROM $tableId$
+		 ORDER BY COMPID ASC
+	</select>
+	
+	<!-- MIXER_ID 읽어오기 -->
+	<select id="masCommonDAO.selectMixerIdList" parameterClass="masCommonVO" resultClass="egovMap">
+		SELECT DISTINCT MIXER_ID as mixerId
+		  FROM $tableId$
+		 WHERE MIXER_ID IS NOT NULL
+		 ORDER BY MIXER_ID ASC
+	</select>
+	
+	<!-- MixerNo 읽어오기 -->
+	<select id="masCommonDAO.selectMixerNoList" parameterClass="masCommonVO" resultClass="egovMap">
+		SELECT DISTINCT MixerNo as mixerId
+		  FROM $tableId$
+		 WHERE MixerNo IS NOT NULL
+		 ORDER BY MixerNo ASC
+	</select>		
+</sqlMap>

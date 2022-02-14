@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ManufactItem">
+	
+	<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias alias="manufactItemVO" type="egovframework.example.manufactItem.service.ManufactItemVO"/>
+	<typeAlias alias="scaleVO" type="egovframework.example.manufactItem.service.ScaleVO"/>
+	
+	<select id="manufactItemDAO.selectManufactItemList" parameterClass="manufactItemVO" resultClass="egovMap">
+		SELECT TOP (#recordCountPerPage#)
+		       Sequence
+		     , CRT_TYPE
+		     , D_Mark
+		     , OrderNo
+		     , SendTime
+		     , ManufactureNo
+		     , BulkCode
+		     , BulkName
+		     , ManufactureiTem
+		     , ManufactureName
+		     , CONVERT(CHAR(10), CONVERT(DATETIME, OrderDate, 23), 120) as OrderDate
+		     , ManufactureRoom
+		     , ManufactureQTY
+		     , CONVERT(NVARCHAR(20), ManufactureDate, 20) as ManufactureDate
+		     , ManufacturePerson
+		     , MixerNo
+		     , RegistrationDate
+		     , CONVERT(NVARCHAR(20), StartTime, 20) as StartTime
+		     , CONVERT(NVARCHAR(20), EndTime, 20) as EndTime
+		     , EndCheck
+		FROM IF_Manufacturing
+	   WHERE 1=1
+        <isNotEmpty prepend="AND" property="sOrderNo">
+          OrderNo = #sOrderNo#
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="sMixerNo">
+          MixerNo = #sMixerNo#
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="sItemCode">
+          ManufactureiTem = #sItemCode#
+        </isNotEmpty>
+         AND OrderDate BETWEEN #sOrderDate# AND #eOrderDate#
+	     AND Sequence NOT IN 
+		   (
+				SELECT TOP (#firstIndex#)
+				       Sequence
+				  FROM IF_Manufacturing
+				 WHERE 1=1
+			      <isNotEmpty prepend="AND" property="sOrderNo">
+			        OrderNo = #sOrderNo#
+			      </isNotEmpty>
+			      <isNotEmpty prepend="AND" property="sMixerNo">
+			        MixerNo = #sMixerNo#
+			      </isNotEmpty>
+			      <isNotEmpty prepend="AND" property="sItemCode">
+			        ManufactureiTem = #sItemCode#
+			      </isNotEmpty>
+			       AND OrderDate BETWEEN #sOrderDate# AND #eOrderDate#
+			     ORDER BY Sequence ASc
+	        )
+	   ORDER BY OrderDate, Sequence ASC
+	</select>
+	
+	<select id="manufactItemDAO.selectManufactItemListCnt" parameterClass="manufactItemVO" resultClass="int">
+		SELECT COUNT(*) totcnt
+		  FROM IF_Manufacturing
+		 WHERE 1=1
+         <isNotEmpty prepend="AND" property="sOrderNo">
+            OrderNo = #sOrderNo#
+         </isNotEmpty>
+         <isNotEmpty prepend="AND" property="sMixerNo">
+            MixerNo = #sMixerNo#
+         </isNotEmpty>
+         <isNotEmpty prepend="AND" property="sItemCode">
+            ManufactureiTem = #sItemCode#
+         </isNotEmpty>
+           AND OrderDate BETWEEN #sOrderDate# AND #eOrderDate#
+	</select>	
+	
+	<select id="manufactItemDAO.selectScaleList"  parameterClass="scaleVO" resultClass="egovMap">
+		SELECT Sequence
+			 , OrderNo
+			 , INPUT_SEQ
+			 , ManufactureNo
+			 , ScaleBarCode
+			 , MaterialCode
+			 , MaterialName
+			 , Capacity
+			 , ScaleCapacity
+			 , LineNumber
+			 , RegistrationDate
+			 , Select_Tank
+			 , DisperDivision
+			 , BarCode
+			 , Checked
+			 , MixerNo
+			 , ipDate
+		  FROM IF_Scale
+		 WHERE 1=1
+		   AND OrderNo = #sOrderNo#
+		 ORDER BY CONVERT(INT, LineNumber) ASC
+	</select>
+	
+	<select id="manufactItemDAO.selectScaleCapacity" parameterClass="scaleVO" resultClass="int">
+		SELECT ISNULL(SUM(ScaleCapacity), 0)
+		  FROM IF_Scale
+		 WHERE 1=1
+		   AND CONVERT(NVARCHAR(20), RegistrationDate, 120) BETWEEN #sIpDate# AND #eIpDate#
+	</select>
+</sqlMap>

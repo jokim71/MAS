@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Worker">
+	
+	<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias alias="workerVO" type="egovframework.example.worker.service.WorkerVO"/>
+	
+	<select id="workerDAO.selectWorkerList" parameterClass="workerVO" resultClass="egovMap">
+		SELECT TOP (#recordCountPerPage#)
+			WORKER_INFO_SEQ,
+			WORKER,
+			USE_YN,
+			CONVERT(NVARCHAR(20), ADDTIM, 20) AS ADDTIM			
+		FROM T_WORKER_INFO
+	    WHERE 1=1
+	     AND COMPID = #sCompId#
+	    <isNotEmpty prepend="AND" property="sWorker">
+	    	WORKER = #sWorker#	
+	    </isNotEmpty>	
+	    AND worker_info_seq NOT IN 
+		  	 ( 
+				SELECT TOP (#firstIndex#)
+				       worker_info_seq
+				  FROM T_WORKER_INFO
+		         WHERE 1=1
+		           AND COMPID = #sCompId#
+		         <isNotEmpty prepend="AND" property="sWorker">
+		           WORKER = #sWorker#
+		         </isNotEmpty>
+			)
+			ORDER BY WORKER_INFO_SEQ DESC
+	</select>
+	
+	<select id="workerDAO.selectWorkerListCnt" parameterClass="workerVO" resultClass="int">
+		SELECT COUNT(*) totcnt
+		  FROM T_WORKER_INFO
+		 WHERE 1=1
+		   AND COMPID = #sCompId#
+		 <isNotEmpty prepend="AND" property="worker">
+          WORKER = #sWorker#
+        </isNotEmpty>
+	</select>	
+	
+	<insert id = "workerDAO.insertWorker" parameterClass="workerVO">
+		MERGE INTO T_WORKER_INFO TWI
+			 USING  (SELECT 1 AS DUM) X
+			ON ( TWI.WORKER_INFO_SEQ = CONVERT(INT, #sWorkerInfoSeq#))
+			WHEN MATCHED THEN
+					UPDATE SET
+							WORKER = #worker#,
+							USE_YN = #use_yn#,
+							COMPID = #compid#,
+							LOGEMP = #log_emp#,
+							LOGTIM = GETDATE()
+			WHEN NOT MATCHED THEN
+				    INSERT 
+						(WORKER, USE_YN, COMPID, ADDEMP, ADDTIM, LOGEMP, LOGTIM)
+					VALUES
+						(#worker#, #use_yn#, #compid#, #add_emp#, GETDATE(), #log_emp#, GETDATE() ) ;
+	</insert> 
+</sqlMap>

@@ -1,0 +1,2 @@
+<link type="text/css" rel="stylesheet" href="<%=request.getContextPath() %>/css/egovframework/sample.css"/>
+<link rel="stylesheet" type="text/css" href="<%=request.getContextPath() %>/css/jquery/jquery-ui.min.css"/>

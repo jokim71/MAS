@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.factAlarm.service.impl.FactAlarmMapper">
+	
+	<select id="selectFactAlarmList" parameterType="factAlarmVO" resultType="egovMap">
+		SELECT rowNum
+		     , wo_no
+             , prod_no
+             , item_code
+             , item_name
+             , mixer_id
+             , CONVERT(NVARCHAR(20), occu_date, 20) AS occu_date
+             , alarm_cont
+		  FROM ( 
+				SELECT ROW_NUMBER() OVER (ORDER BY occu_date ASC) AS rowNum
+				     , *
+				  FROM T_FACT_ALARM_INFO
+		         WHERE 1=1
+		         <if test="sWoNo != null and sWoNo != ''">
+		           AND WO_NO = #sWoNo#
+		         </if>
+		         <if test="sOccuDate != null and sOccuDate != ''">
+		           AND CONVERT(NVARCHAR(20), OCCU_DATE, 120) = #sOccuDate# 
+		        </if>
+				) T1
+		 WHERE 1=1
+		 ORDER BY occu_date ASC
+	
+	</select>
+	
+	<select id="selectFactAlarmListCnt" parameterType="factAlarmVO" resultType="int">
+		SELECT COUNT(*) totcnt
+		  FROM T_FACT_ALARM_INFO
+		 WHERE 1=1
+		 <if test="sWoNo != null and sWoNo != ''">
+           AND WO_NO = #sWoNo#
+         </if>
+         <if test="sOccuDate != null and sOccuDate != ''">
+           AND CONVERT(NVARCHAR(20), OCCU_DATE, 120) = #sOccuDate# 
+        </if>
+	</select>	
+</mapper>

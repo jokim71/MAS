@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.manufactItem.service.impl.ManufactItemMapper">
+	
+	<select id="selectManufactItemList" parameterType="manufactItemVO" resultType="egovMap">
+		SELECT Sequence
+		     , CRT_TYPE
+		     , D_Mark
+		     , OrderNo
+		     , SendTime
+		     , ManufactureNo
+		     , BulkCode
+		     , BulkName
+		     , ManufactureiTem
+		     , ManufactureName
+		     , CONVERT(CHAR(10), CONVERT(DATETIME, OrderDate, 23), 120) as OrderDate
+		     , ManufactureRoom
+		     , ManufactureQTY
+		     , CONVERT(NVARCHAR(20), ManufactureDate, 20) as ManufactureDate
+		     , ManufacturePerson
+		     , MixerNo
+		     , RegistrationDate
+		     , CONVERT(NVARCHAR(20), StartTime, 20) as StartTime
+		     , CONVERT(NVARCHAR(20), EndTime, 20) as EndTime
+		     , EndCheck
+		FROM (
+				SELECT ROW_NUMBER() OVER (ORDER BY OrderDate,  Sequence ASC) AS rowNum
+				     . *
+				  FROM IF_Manufacturing
+				 WHERE 1=1
+		         <if test="sOrderNo != null and sOrderNo != ''">
+		           AND OrderNo = #sOrderNo#
+		         </if>
+		         <if test="sMixerNo != null and sMixerNo != ''">
+		           AND MixerNo = #sMixerNo#
+		         </if>
+		         <if test="sItemCode != null and sItemCode != ''">
+		           AND ManufactureiTem = #sItemCode#
+		         </if>
+		           AND OrderDate BETWEEN #sOrderDate# AND #eOrderDate#
+		     ) IM
+	   WHERE 1=1
+	     AND rowNum BETWEEN ((#firstIndex# - 1) * #recordCountPerPage#) + 1 AND (#firstIndex# * #recordCountPerPage#)
+	   ORDER BY OrderDate, Sequence ASC
+	</select>
+	
+	<select id="selectManufactItemListCnt" parameterType="manufactItemVO" resultType="int">
+		SELECT COUNT(*) totcnt
+		  FROM T_FACT_ALARM_INFO
+		 WHERE 1=1
+         <if test="sOrderNo != null and sOrderNo != ''">
+           AND OrderNo = #sOrderNo#
+         </if>
+         <if test="sMixerNo != null and sMixerNo != ''">
+           AND MixerNo = #sMixerNo#
+         </if>
+         <if test="sItemCode != null and sItemCode != ''">
+           AND ManufactureiTem = #sItemCode#
+         </if>
+           AND OrderDate BETWEEN #sOrderDate# AND #eOrderDate#
+	</select>	
+	
+	<select id="selectScaleList"  parameterType="scaleVO" resultType="egovMap">
+		SELECT Sequence
+			 , OrderNo
+			 , INPUT_SEQ
+			 , ManufactureNo
+			 , ScaleBarCode
+			 , MaterialCode
+			 , MaterialName
+			 , Capacity
+			 , ScaleCapacity
+			 , LineNumber
+			 , RegistrationDate
+			 , Select_Tank
+			 , DisperDivision
+			 , BarCode
+			 , Checked
+			 , MixerNo
+			 , ipDate
+			 , ROW_NUMBER() OVER (ORDER BY  Sequence ASC) AS rowNum
+		  FROM IF_Scale
+		 WHERE 1=1
+		   AND OrderNo = #sOrderNo#
+		 ORDER BY Sequence ASC
+	</select>
+	
+	<select id="selectScaleCapacity" parameterType="scaleVO" resultType="int">
+		SELECT ISNULL(SUM(ScaleCapacity), 0)
+		  FROM IF_Scale
+		 WHERE 1=1
+		   AND CONVERT(NVARCHAR(20), ipDate, 120) BETWEEN #sIpDate# AND #eIpDate#
+	</select>
+</mapper>

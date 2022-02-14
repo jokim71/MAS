@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="FactAlarm">
+	
+	<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+	<typeAlias alias="factAlarmVO" type="egovframework.example.factAlarm.service.FactAlarmVO"/>
+	
+	<select id="factAlarmDAO.selectFactAlarmList" parameterClass="factAlarmVO" resultClass="egovMap">
+		SELECT TOP (#recordCountPerPage#)
+		       fact_alarm_info_seq
+		     , wo_no
+             , prod_no
+             , item_code
+             , item_name
+             , mixer_id
+             , CONVERT(NVARCHAR(20), occu_date, 20) AS occu_date
+             , alarm_cont
+		  FROM T_FACT_ALARM_INFO
+         WHERE 1=1
+           AND COMPID = #sCompId#
+         <isNotEmpty prepend="AND" property="sMixerId">
+           mixer_id = #sMixerId#
+         </isNotEmpty>
+         <isNotEmpty prepend="AND" property="sOccuDate">
+           CONVERT(NVARCHAR(20), occu_date, 23) = #sOccuDate# 
+         </isNotEmpty>
+           AND fact_alarm_info_seq NOT IN 
+		  	 ( 
+				SELECT TOP (#firstIndex#)
+				       fact_alarm_info_seq
+				  FROM T_FACT_ALARM_INFO
+		         WHERE 1=1
+		           AND COMPID = #sCompId#
+		         <isNotEmpty prepend="AND" property="sMixerId">
+		           mixer_id = #sMixerId#
+		         </isNotEmpty>
+		         <isNotEmpty prepend="AND" property="sOccuDate">
+		           CONVERT(NVARCHAR(20), occu_date, 23) = #sOccuDate# 
+		         </isNotEmpty>
+		         ORDER BY fact_alarm_info_seq ASC
+				)
+		 ORDER BY occu_date ASC
+	</select>
+	
+	<select id="factAlarmDAO.selectFactAlarmListCnt" parameterClass="factAlarmVO" resultClass="int">
+		SELECT COUNT(*) totcnt
+		  FROM T_FACT_ALARM_INFO
+		 WHERE 1=1
+		   AND COMPID = #sCompId#
+         <isNotEmpty prepend="AND" property="sMixerId">
+           mixer_id = #sMixerId#
+         </isNotEmpty>
+         <isNotEmpty prepend="AND" property="sOccuDate">
+           CONVERT(NVARCHAR(20), OCCU_DATE, 23) = #sOccuDate# 
+         </isNotEmpty>
+	</select>	
+</sqlMap>
