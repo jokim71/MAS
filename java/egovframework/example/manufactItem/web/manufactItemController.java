@@ -135,7 +135,7 @@ public class manufactItemController {
 		
 		List<?> scaleList = manufactItemService.selectScaleList(scaleVO);		
 		model.addAttribute("resultScaleList", scaleList);		
-		model.addAttribute("id", id); // 지시번호+투입원료 데이터 엑셀로 출력하기 위한 변수
+		model.addAttribute("resultOrderNo", id); // 지시번호+투입원료 데이터 엑셀로 출력하기 위한 변수
 		
 		log.debug("##### selectManufactItemList selectManufactItemList :: " + list);
 		log.debug("##### selectManufactItemList selectManufactItemListCnt :: " + totCnt);
@@ -174,9 +174,9 @@ public class manufactItemController {
 	 * 지시내역 그리드 엑셀 다운로드
 	 */
 	@RequestMapping(value = "/excelManufactItemList.do")
-    public void excelManufactItemList(HttpServletRequest request,
-            HttpServletResponse response, @ModelAttribute("searchVO") ManufactItemVO searchVO,
-            ModelMap modelMap) throws Exception { // 해당 화면의 검색조건에 해당하는 vo가 있다면 추가
+    public void excelManufactItemList(HttpServletRequest request, HttpServletResponse response,
+    		                          @ModelAttribute("searchVO") ManufactItemVO searchVO, ModelMap modelMap) throws Exception { 
+		log.debug("##### excelManufactItemList START !!! #####");
 
         // 리스트 조회하듯이 검색조건을 파라미터로 받아온다음 리스트를 조회한다.
 		List<?> list = manufactItemService.selectManufactItemList(searchVO);
@@ -188,7 +188,6 @@ public class manufactItemController {
         // 엑셀 다운로드 메소드가 담겨 있는 객체
         MakeExcel me = new MakeExcel();
 
-        //me.download(request, response, beans, "다운받을때지정될 엑셀파일명", "엑셀템플릿 파일 명.xlsx", "");
         me.download(request, response, beans, "지시번호", "manufactItem.xlsx", "");
     }
 	
@@ -201,19 +200,21 @@ public class manufactItemController {
 	 * 투입원료 그리드 엑셀 다운로드
 	 */
 	@RequestMapping(value = "/excelScaleCapacityList.do")
-    public void excelScaleCapacityList(HttpServletRequest request,
-            HttpServletResponse response, @ModelAttribute("searchVO") ManufactItemVO searchVO,
-            ModelMap modelMap) throws Exception { // 해당 화면의 검색조건에 해당하는 vo가 있다면 추가
+    public void excelScaleCapacityList(HttpServletRequest request, HttpServletResponse response, 
+    		                           @ModelAttribute("searchVO") ManufactItemVO searchVO, ModelMap modelMap) throws Exception { 
+		log.debug("##### excelScaleCapacityList START !!! #####");
 
-        // 리스트 조회하듯이 검색조건을 파라미터로 받아온다음 리스트를 조회한다.
-		ScaleVO scaleVO = new ScaleVO();
 		String id = searchVO.getSearchOrderNo();
-System.out.println("id >>> " + id);
+		
 		if (id == null || id.length() == 0) {
 			id = "";
 		}
-				
-		scaleVO.setsOrderNo(id);		// 선택한 지시번호	
+		
+		log.debug("##### excelScaleCapacityList getParameter : " + id);
+        // 리스트 조회하듯이 검색조건을 파라미터로 받아온다음 리스트를 조회한다.
+		ScaleVO scaleVO = new ScaleVO();		
+			
+		scaleVO.setsOrderNo(id);		// 선택한 지시번호
 				
 		List<?> scaleList = manufactItemService.selectScaleList(scaleVO);
         
@@ -224,7 +225,6 @@ System.out.println("id >>> " + id);
         // 엑셀 다운로드 메소드가 담겨 있는 객체
         MakeExcel me = new MakeExcel();
 
-        //me.download(request, response, beans, "다운받을때지정될 엑셀파일명", "엑셀템플릿 파일 명.xlsx", "");
         me.download(request, response, beans, "지시번호+투입원료", "scaleCapacity.xlsx", "");
     }
 }

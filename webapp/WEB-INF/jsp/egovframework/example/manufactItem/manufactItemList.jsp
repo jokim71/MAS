@@ -58,12 +58,12 @@
         }
         
         /* SubData Excel Download function */
-        function fn_egov_subData_xlsDownload(){
-        	var searchOrderNo = document.getElementById('searchOrderNo').value;
-        	if(searchOrderNo == '' || searchOrderNo == null){
+        function fn_egov_subData_xlsDownload(id){        
+        	if(id == '' || id == null){
         		alert("지시번호를 선택하지 않았습니다.");
         		return;
         	}
+        	document.itemListForm.searchOrderNo.value = id;
         	
         	document.itemListForm.action = "<c:url value='/excelScaleCapacityList.do'/>";
            	document.itemListForm.submit();
@@ -74,7 +74,7 @@
 
 <body style="text-align:center; margin:0 auto; display:inline; padding-top:100px;">
     <form:form commandName="searchVO" id="listForm" name="listForm" method="post">
-    	<input type="hidden" name="orderNo" />
+    	<input type="hidden" name="orderNo"/>
         <div id="content_pop">
         	<!-- 타이틀 -->
         	<div id="title">
@@ -192,9 +192,10 @@
     </form:form>
     <!-- 원료데이터 -->
     <form:form commandName="searchVO" id="itemListForm" name="itemListForm" method="post">
+    	<input type="hidden" name="searchOrderNo"/>
         <div id="content_pop">
         	<span class="btn_blue_l" style="float: right;">
-        	    <a href="javascript:fn_egov_subData_xlsDownload();"><spring:message code="button.xls" /></a>
+        	    <a href="javascript:fn_egov_subData_xlsDownload('<c:out value="${resultOrderNo}"/>');"><spring:message code="button.xls" /></a>
         	    <img src="<c:url value='/images/egovframework/example/btn_bg_r.gif'/>" style="margin-left:6px;" alt="엑셀로 저장"/>
         	</span>
 		<!-- List -->
