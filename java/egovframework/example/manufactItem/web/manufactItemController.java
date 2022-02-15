@@ -105,7 +105,7 @@ public class manufactItemController {
 		MasCommonVO commVO = new MasCommonVO();
 		
 		// 설비알람발생 테이블 설정 
-		commVO.setTableId("IF_Manufacturing");
+		commVO.setTableId("PMS.dbo.IF_Manufacturing");
 
 		log.debug("##### selectManufactItemList paramVO :: " + commVO);
 		

@@ -29,7 +29,7 @@
 		     , CONVERT(NVARCHAR(20), StartTime, 20) as StartTime
 		     , CONVERT(NVARCHAR(20), EndTime, 20) as EndTime
 		     , EndCheck
-		FROM IF_Manufacturing
+		FROM PMS.dbo.IF_Manufacturing
 	   WHERE 1=1
         <isNotEmpty prepend="AND" property="sOrderNo">
           OrderNo = #sOrderNo#
@@ -45,7 +45,7 @@
 		   (
 				SELECT TOP (#firstIndex#)
 				       Sequence
-				  FROM IF_Manufacturing
+				  FROM PMS.dbo.IF_Manufacturing
 				 WHERE 1=1
 			      <isNotEmpty prepend="AND" property="sOrderNo">
 			        OrderNo = #sOrderNo#
@@ -64,7 +64,7 @@
 	
 	<select id="manufactItemDAO.selectManufactItemListCnt" parameterClass="manufactItemVO" resultClass="int">
 		SELECT COUNT(*) totcnt
-		  FROM IF_Manufacturing
+		  FROM PMS.dbo.IF_Manufacturing
 		 WHERE 1=1
          <isNotEmpty prepend="AND" property="sOrderNo">
             OrderNo = #sOrderNo#
@@ -96,7 +96,7 @@
 			 , Checked
 			 , MixerNo
 			 , ipDate
-		  FROM IF_Scale
+		  FROM PMS.dbo.IF_Scale
 		 WHERE 1=1
 		   AND OrderNo = #sOrderNo#
 		 ORDER BY CONVERT(INT, LineNumber) ASC
@@ -104,7 +104,7 @@
 	
 	<select id="manufactItemDAO.selectScaleCapacity" parameterClass="scaleVO" resultClass="int">
 		SELECT ISNULL(SUM(ScaleCapacity), 0)
-		  FROM IF_Scale
+		  FROM PMS.dbo.IF_Scale
 		 WHERE 1=1
 		   AND CONVERT(NVARCHAR(20), RegistrationDate, 120) BETWEEN #sIpDate# AND #eIpDate#
 	</select>
