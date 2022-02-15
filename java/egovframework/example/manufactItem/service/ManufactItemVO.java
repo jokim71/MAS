@@ -17,6 +17,8 @@ public class ManufactItemVO extends CommPagingVO{
 	 */
 	private static final long serialVersionUID = 1L;
     
+	private String mode;
+	
 	/** 조회 조건 */
 	private String sOrderNo;		// 제조지시번호 
 	private String sMixerNo;		// 믹서번 
@@ -45,6 +47,13 @@ public class ManufactItemVO extends CommPagingVO{
 	private String StartTime;			// 시작일시 
 	private String EndTime;				// 종료일시 
 	private String EndCheck;
+	
+	public String getMode() {
+		return mode;
+	}
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
 	public String getsOrderNo() {
 		return sOrderNo;
 	}

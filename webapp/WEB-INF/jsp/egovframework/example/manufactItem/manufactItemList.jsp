@@ -29,12 +29,14 @@
         <!--
         /* 글 목록 화면 function */
         function fn_egov_selectList() {
+        	document.listForm.mode.value = "SEARCH";
         	document.listForm.action = "<c:url value='/manufactItemList.do'/>";
            	document.listForm.submit();
         }
         
         /* pagination 페이지 링크 function */
         function fn_egov_link_page(pageNo){
+        	document.listForm.mode.value = "SEARCH";
         	document.listForm.pageIndex.value = pageNo;
         	document.listForm.action = "<c:url value='/manufactItemList.do'/>";
            	document.listForm.submit();
@@ -42,6 +44,7 @@
 
         function fn_egov_manufactList(id){
         	document.listForm.orderNo.value = id;
+        	document.listForm.mode.value = "SEARCH";
 
         	document.listForm.action = "<c:url value='/manufactItemList.do'/>";
            	document.listForm.submit();
@@ -75,6 +78,7 @@
 <body style="text-align:center; margin:0 auto; display:inline; padding-top:100px;">
     <form:form commandName="searchVO" id="listForm" name="listForm" method="post">
     	<input type="hidden" name="orderNo"/>
+    	<input type="hidden" name="mode"/>
         <div id="content_pop">
         	<!-- 타이틀 -->
         	<div id="title">

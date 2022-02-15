@@ -67,14 +67,22 @@ public class manufactItemController {
 		log.debug("##### selectManufactItemList START !!! #####");
 		
 		// 계정정보 확인
-		String lcompid = request.getParameter("compid");
-		String luserid = request.getParameter("userid");
-		String luuid   = request.getParameter("uuid");
-				
-		if (("".equals(lcompid) || lcompid == null) || ("".equals(luserid) || luserid == null) || ("".equals(luuid) || luserid == luuid)) {
-			model.addAttribute("resultMsg", "E");
+		String lcompid = "";
+		String luserid = "";
+		String luuid   = "";
+		
+		if ("".equals(searchVO.getMode()) || searchVO.getMode() == null) {
+			// 계정정보 확인
+			lcompid = request.getParameter("compid");
+			luserid = request.getParameter("userid");
+			luuid   = request.getParameter("uuid");
+	
 			
-			return "cmmn/egovError";
+			if (("".equals(lcompid) || lcompid == null) || ("".equals(luserid) || luserid == null) || ("".equals(luuid) || luserid == luuid)) {
+				model.addAttribute("resultMsg", "E");
+				
+				return "cmmn/egovError";
+			}
 		}
 		
 		/** EgovPropertyService */

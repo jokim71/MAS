@@ -16,7 +16,9 @@ public class FactAlarmVO extends CommPagingVO{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	
+	private String mode;
+	
 	/** 조회 조건 */
 	private String sCompId;		// 회사(공장)아이디
 	private String sMixerId;	// 믹서아이디 
@@ -31,6 +33,13 @@ public class FactAlarmVO extends CommPagingVO{
 	private String occu_date;	// 발생일시 
 	private String alarm_cont;	// 발생내역 
 	
+	
+	public String getMode() {
+		return mode;
+	}
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
 	public String getsCompId() {
 		return sCompId;
 	}

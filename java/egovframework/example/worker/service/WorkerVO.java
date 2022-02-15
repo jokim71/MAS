@@ -15,6 +15,7 @@ public class WorkerVO extends CommPagingVO {
 
 	private static final long serialVersionUID = 1L;
 	
+	private String mode;
 	private String sCompId;		// 회사(공장)아이디  조회용 
 	private String sWorker;	    // 작업자 아이디  조회용
 	private String sWorkerInfoSeq;
@@ -32,6 +33,12 @@ public class WorkerVO extends CommPagingVO {
 	private String log_emp;  // 수정등록자
 	private String log_tim; // 수정시간
 	
+	public String getMode() {
+		return mode;
+	}
+	public void setMode(String mode) {
+		this.mode = mode;
+	}
 	public String getRegisterFlag() {
 		return registerFlag;
 	}

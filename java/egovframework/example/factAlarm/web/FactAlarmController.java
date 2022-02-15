@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,14 +55,22 @@ public class FactAlarmController {
 		log.debug("##### selectFactAlarmList START !!! #####");
 
 		// 계정정보 확인
-		String lcompid = request.getParameter("compid");
-		String luserid = request.getParameter("userid");
-		String luuid   = request.getParameter("uuid");
-
-		if (("".equals(lcompid) || lcompid == null) || ("".equals(luserid) || luserid == null) || ("".equals(luuid) || luserid == luuid)) {
-			model.addAttribute("resultMsg", "E");
+		String lcompid = "";
+		String luserid = "";
+		String luuid   = "";
+		
+		if ("".equals(searchVO.getMode()) || searchVO.getMode() == null) {
+			// 계정정보 확인
+			lcompid = request.getParameter("compid");
+			luserid = request.getParameter("userid");
+			luuid   = request.getParameter("uuid");
+	
 			
-			return "cmmn/egovError";
+			if (("".equals(lcompid) || lcompid == null) || ("".equals(luserid) || luserid == null) || ("".equals(luuid) || luserid == luuid)) {
+				model.addAttribute("resultMsg", "E");
+				
+				return "cmmn/egovError";
+			}
 		}
 		
 		/** EgovPropertyService */
