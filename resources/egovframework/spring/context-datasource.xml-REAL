@@ -4,13 +4,13 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
         http://www.springframework.org/schema/jdbc  http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd">
 	
-	<!-- Mssql 개발 	
+	<!-- Mssql 개발 -->	
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 	    <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver"/>
 	    <property name="url" value="jdbc:jtds:sqlserver://218.151.86.101:1433/COSMAX_MAS"/>
 	    <property name="username" value="COSMAX_MAS"/>
 	    <property name="password" value="mas12!@"/>
-	</bean> -->
+	</bean>
 	
 	<!-- Mssql COSMAX 테스트(MAS_TEST), 운영(MAS) -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">

@@ -3,6 +3,7 @@ package egovframework.example.factAlarm.web;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +49,20 @@ public class FactAlarmController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/factAlarmList.do")
-	public String selectFactAlarmList(@ModelAttribute("searchVO") FactAlarmVO searchVO, ModelMap model) throws Exception {
+	public String selectFactAlarmList(HttpServletRequest request, 
+			                          @ModelAttribute("searchVO") FactAlarmVO searchVO, ModelMap model) throws Exception {
 		log.debug("##### selectFactAlarmList START !!! #####");
+
+		// 계정정보 확인
+		String lcompid = request.getParameter("compid");
+		String luserid = request.getParameter("userid");
+		String luuid   = request.getParameter("uuid");
+
+		if (("".equals(lcompid) || lcompid == null) || ("".equals(luserid) || luserid == null) || ("".equals(luuid) || luserid == luuid)) {
+			model.addAttribute("resultMsg", "E");
+			
+			return "cmmn/egovError";
+		}
 		
 		/** EgovPropertyService */
 		searchVO.setPageUnit(propertiesService.getInt("pageUnit"));
@@ -57,7 +70,7 @@ public class FactAlarmController {
 		
 		// 최초 회사(공장) 값 설정
 		if ("".equals(searchVO.getsCompId()) || searchVO.getsCompId() == null)
-				searchVO.setsCompId(propertiesService.getString("compId"));
+				searchVO.setsCompId(lcompid);
 
 		/** pageing setting */
 		PaginationInfo paginationInfo = new PaginationInfo();

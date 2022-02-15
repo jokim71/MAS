@@ -34,18 +34,18 @@
         
         /* 설비 알람 발생 호출 function */
         function fn_factAlarm_List() {
-           	document.listForm.action = "<c:url value='/factAlarmList.do'/>";
+           	document.listForm.action = "<c:url value='/factAlarmList.do?compid=1200&userid=112190051&uuid=5701261a-f878-4d8e-9a66-ac01b125be05'/>";
            	document.listForm.submit();
         }    
         
         /* 투입원료 내역 호출 function */
         function fn_manufactItem_List() {
-           	document.listForm.action = "<c:url value='/manufactItemList.do'/>";
+           	document.listForm.action = "<c:url value='/manufactItemList.do?compid=1200&userid=112190051&uuid=5701261a-f878-4d8e-9a66-ac01b125be05'/>";
            	document.listForm.submit();
         } 
         /* 작업자 리스트 호출 function */
         function fn_worker_List() {
-           	document.listForm.action = "<c:url value='/workerList.do'/>";
+           	document.listForm.action = "<c:url value='/workerList.do?compid=1200&userid=112190051&uuid=5701261a-f878-4d8e-9a66-ac01b125be05'/>";
            	document.listForm.submit();
         }  
         

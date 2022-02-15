@@ -1,7 +1,6 @@
 package egovframework.example.manufactItem.web;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import egovframework.example.cmmn.MakeExcel;
 import egovframework.example.cmmn.service.MasCommonService;
@@ -27,7 +25,6 @@ import egovframework.example.manufactItem.service.ManufactItemService;
 import egovframework.example.manufactItem.service.ManufactItemVO;
 import egovframework.example.manufactItem.service.ScaleVO;
 import egovframework.example.sample.service.EgovSampleService;
-import egovframework.example.sample.service.SampleDefaultVO;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
@@ -65,8 +62,20 @@ public class manufactItemController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/manufactItemList.do")
-	public String selectManufactItemList(@ModelAttribute("searchVO") ManufactItemVO searchVO, ModelMap model) throws Exception {
+	public String selectManufactItemList(HttpServletRequest request, 
+			                             @ModelAttribute("searchVO") ManufactItemVO searchVO, ModelMap model) throws Exception {
 		log.debug("##### selectManufactItemList START !!! #####");
+		
+		// 계정정보 확인
+		String lcompid = request.getParameter("compid");
+		String luserid = request.getParameter("userid");
+		String luuid   = request.getParameter("uuid");
+				
+		if (("".equals(lcompid) || lcompid == null) || ("".equals(luserid) || luserid == null) || ("".equals(luuid) || luserid == luuid)) {
+			model.addAttribute("resultMsg", "E");
+			
+			return "cmmn/egovError";
+		}
 		
 		/** EgovPropertyService */
 		searchVO.setPageUnit(propertiesService.getInt("pageUnit"));
@@ -104,8 +113,10 @@ public class manufactItemController {
 		// Mixer 정보 조회조건 
 		MasCommonVO commVO = new MasCommonVO();
 		
-		// 설비알람발생 테이블 설정 
-		commVO.setTableId("PMS.dbo.IF_Manufacturing");
+		// 설비알람발생 테이블 설정
+		// 운영 PMS.dbo 설정
+		commVO.setTableId("IF_Manufacturing");
+//		commVO.setTableId("PMS.dbo.IF_Manufacturing");
 
 		log.debug("##### selectManufactItemList paramVO :: " + commVO);
 		

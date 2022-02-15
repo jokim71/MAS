@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.enterprise.inject.Model;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,8 +52,20 @@ public class WorkerController {
 	private MasCommonService masCommonService;
 		
 	@RequestMapping(value="/workerList.do")
-	public String selectWorkerList(@ModelAttribute("searchVO") WorkerVO searchVO, ModelMap model) throws Exception {
+	public String selectWorkerList(HttpServletRequest request, 
+			                       @ModelAttribute("searchVO") WorkerVO searchVO, ModelMap model) throws Exception {
 		log.debug("##### selectWorkerList START !!! #####");
+		
+		// 계정정보 확인
+		String lcompid = request.getParameter("compid");
+		String luserid = request.getParameter("userid");
+		String luuid   = request.getParameter("uuid");
+
+		if (("".equals(lcompid) || lcompid == null) || ("".equals(luserid) || luserid == null) || ("".equals(luuid) || luserid == luuid)) {
+			model.addAttribute("resultMsg", "E");
+			
+			return "cmmn/egovError";
+		}
 		
 		/** EgovPropertyService */
 		searchVO.setPageUnit(propertiesService.getInt("pageUnit"));
@@ -61,8 +74,8 @@ public class WorkerController {
 		// 최초 회사(공장) 값 설정
 		if ("".equals(searchVO.getsCompId()) || searchVO.getsCompId() == null) {
 			// 초기값 설정
-			searchVO.setsCompId(propertiesService.getString("compId"));
-			searchVO.setCompid(propertiesService.getString("compId"));
+			searchVO.setsCompId(lcompid);
+			searchVO.setCompid(lcompid);
 			searchVO.setUse_yn("Y");
 		} else {
 			searchVO.setCompid(searchVO.getsCompId());			
@@ -101,10 +114,10 @@ public class WorkerController {
 	public String InsertWorker(@ModelAttribute("searchVO") WorkerVO searchVO, ModelMap model) throws Exception {
 		log.debug("##### InsertWorker START !!! #####");
 						
-		log.debug("##### InsertWorker sWorkerInfoSeq : " + searchVO.getsWorkerInfoSeq());
-		log.debug("worker : " + searchVO.getWorker());
-		log.debug("use_yn : " + searchVO.getUse_yn());
-		log.debug("compid : " + searchVO.getCompid());
+//		log.debug("##### InsertWorker sWorkerInfoSeq : " + searchVO.getsWorkerInfoSeq());
+//		log.debug("worker : " + searchVO.getWorker());
+//		log.debug("use_yn : " + searchVO.getUse_yn());
+//		log.debug("compid : " + searchVO.getCompid());
 		
 		searchVO.setAdd_emp("admin");
 		searchVO.setLog_emp("admin");
