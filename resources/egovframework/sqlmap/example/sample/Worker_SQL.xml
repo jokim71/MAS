@@ -29,6 +29,8 @@
 		         <isNotEmpty prepend="AND" property="sWorker">
 		           WORKER = #sWorker#
 		         </isNotEmpty>
+				ORDER BY WORKER_INFO_SEQ DESC		         	
+		        
 			)
 			ORDER BY WORKER_INFO_SEQ DESC
 	</select>
